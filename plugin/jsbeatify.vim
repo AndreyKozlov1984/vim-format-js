@@ -3,11 +3,11 @@ let s:payloadName = s:jsFolder . "payload.js"
 let s:jsName = s:jsFolder . "beautify.js"
 function! s:FormatJs()
     normal mp
-    let s:optionsName = s:GetOptionsFileName()
+    let s:optionsName = g:GetOptionsFileName()
     execute "%!js " . s:payloadName . " " . s:jsName . " " . s:optionsName
     normal `p
 endfunction
-function! s:GetOptionsFileName()
+function! g:GetOptionsFileName()
     let s:optionsInCurrentFolder = ".jsbeautify"
     let s:optionsInHomeFolder = "~/.jsbeautify" 
     let s:optionsInPlugin = s:jsFolder . "settings.js" 
