@@ -1,6 +1,7 @@
 (function(a) {
-	load(arguments[0]);
-	load(arguments[1]);
+	var files = arguments[0];
+	load(files[0]);
+	load(files[1]);
 	var input = "";
 	var line = "";
 	var blankcount = "0";
