@@ -1,5 +1,6 @@
 (function(a) {
 	load(arguments[0]);
+	load(arguments[1]);
 	var input = "";
 	var line = "";
 	var blankcount = "0";
@@ -13,10 +14,5 @@
 		input += "\n";
 	}
 	input = input.substring(0, input.length - blankcount);
-	var options = {
-		indent_size: 2,
-		indent_char: " ",
-		preserve_newlines: false
-	};
-	print(js_beautify(input, options));
+	print(js_beautify(input, jsbeautify_options));
 })(arguments);

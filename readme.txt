@@ -10,6 +10,6 @@ for example look here (link to my vim config), cause you can store a list of all
     
 TODO:
   adjust only javascript files (ftplugin)
-  load options from cwd/.jsbeatify then ~/.jsbeautify , so more chances to customize the project
+  load options from cwd/.jsbeautify then ~/.jsbeautify , so more chances to customize the project
   implement support for other js enginges ( or even use a jsbeautify version written in ruby)
 
