@@ -12,7 +12,6 @@ function! g:GetOptionsFileName()
     let s:optionsInHomeFolder = "~/.jsbeautify" 
     let s:optionsInPlugin = s:jsFolder . "settings.js" 
     for fileName in [s:optionsInCurrentFolder,s:optionsInHomeFolder,s:optionsInPlugin]
-        echo fileName
         if filereadable(fileName)
             return fileName
         endif
