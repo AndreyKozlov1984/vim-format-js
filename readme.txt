@@ -1,7 +1,7 @@
 
 This is a Js Beautify implementation for the vim
 just press <leader>ff in normal mode and the whole javascript file will be 
-formatted. 
+formatted. Also the cursor position is preserved
 Format options are looked for in this order: .jsbeautify then ~/.jsbeautify and then <this plugin folder>/js/settings.js, so there are lof of ways to set up required formatting options
 In order to work this plugin requires spidermonkey engine to be installed in the system.
 
@@ -12,4 +12,5 @@ for example look here (link to my vim config), cause you can store a list of all
 TODO:
   adjust only javascript files (ftplugin)
   implement support for other js enginges ( or even use a jsbeautify version written in ruby)
+  restore all marks position (a-z)
 

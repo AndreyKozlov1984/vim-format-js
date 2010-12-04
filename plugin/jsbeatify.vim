@@ -37,11 +37,11 @@ function! s:SetNumberOfNonSpaceCharactersBeforeCursor(numberOfNonBlankCharacters
             if match(char,'\s') == -1
                 let nonBlankCount = nonBlankCount + 1
             endif
-            if nonBlankCount == a:numberOfNonBlankCharactersFromTheStartOfFile
+            let charIndex = charIndex + 1
+            if nonBlankCount == a:numberOfNonBlankCharactersFromTheStartOfFile 
                 call setpos('.',[0,lineNumber,charIndex,0])
                 return
             end
-            let charIndex = charIndex + 1
         endwhile
         let lineNumber = lineNumber + 1
     endwhile
