@@ -2,10 +2,9 @@ let s:jsFolder = expand("<sfile>:p:h") . "/../js/"
 let s:payloadName = s:jsFolder . "payload.js"
 let s:jsName = s:jsFolder . "beautify.js"
 "Remembering current position ignoring all blank symbols
-function! s:GetNumberOfNonSpaceCharactersBeforeCursor()
-    let cursorPositionAsList = getpos('.')
-    let cursorRow = cursorPositionAsList[1]
-    let cursorColumn = cursorPositionAsList[2]
+function! s:GetNumberOfNonSpaceCharactersFromTheStartOfFile(position)
+    let cursorRow = a:position.line
+    let cursorColumn = a:position.column
     let lineNumber = 1
     let nonBlankCount = 0
     while lineNumber <= cursorRow
@@ -25,8 +24,10 @@ function! s:GetNumberOfNonSpaceCharactersBeforeCursor()
     endwhile
     return nonBlankCount
 endfunction
-"Restoring current position by number of non blank characters
-function! s:SetNumberOfNonSpaceCharactersBeforeCursor(numberOfNonBlankCharactersFromTheStartOfFile)
+
+"Converts number of non blank characters to cursor position (line and column)
+function! s:GetCursorPosition(numberOfNonBlankCharactersFromTheStartOfFile)
+    "echo a:numberOfNonBlankCharactersFromTheStartOfFile
     let lineNumber = 1
     let nonBlankCount = 0
     while lineNumber <= line('$')
@@ -39,21 +40,45 @@ function! s:SetNumberOfNonSpaceCharactersBeforeCursor(numberOfNonBlankCharacters
             endif
             let charIndex = charIndex + 1
             if nonBlankCount == a:numberOfNonBlankCharactersFromTheStartOfFile 
-                call setpos('.',[0,lineNumber,charIndex,0])
-                return
+                "echo 'found position!'
+                return {'line': lineNumber,'column': charIndex}
             end
         endwhile
         let lineNumber = lineNumber + 1
     endwhile
+    "echo "Oops, nothing found!"
+endfunction
+
+"Restoring current position by number of non blank characters
+function! s:SetNumberOfNonSpaceCharactersBeforeCursor(mark,numberOfNonBlankCharactersFromTheStartOfFile)
+    let location = s:GetCursorPosition(a:numberOfNonBlankCharactersFromTheStartOfFile)
+    call setpos(a:mark, [0, location.line, location.column, 0])
+endfunction
+
+function! s:GetCursorAndMarksPositions()
+    let localMarks = map(range(char2nr('a'), char2nr('z'))," \"'\".nr2char(v:val) ") 
+    let marks = ['.'] + localMarks
+    let result = {}
+    for positionType in marks
+        let cursorPositionAsList = getpos(positionType)
+        let cursorPosition = {'buffer': cursorPositionAsList[0], 'line': cursorPositionAsList[1], 'column': cursorPositionAsList[2]}
+        if cursorPosition.buffer == 0 && cursorPosition.line > 0
+            let result[positionType] = cursorPosition
+        endif
+    endfor
+    return result
 endfunction
 
 function! s:FormatJs()
-    let oldPosition = s:GetNumberOfNonSpaceCharactersBeforeCursor()
+    let cursorPositions = s:GetCursorAndMarksPositions()
+    call map(cursorPositions, " extend (v:val,{'characters': s:GetNumberOfNonSpaceCharactersFromTheStartOfFile(v:val)}) ")
 
     let s:optionsName = s:GetOptionsFileName()
     execute "%!js " . s:payloadName . " " . s:jsName . " " . s:optionsName
 
-    call s:SetNumberOfNonSpaceCharactersBeforeCursor(oldPosition)
+    for [key,value] in items(cursorPositions)
+        call s:SetNumberOfNonSpaceCharactersBeforeCursor(key,value.characters)
+    endfor
 endfunction
 function! s:GetOptionsFileName()
     let s:optionsInCurrentFolder = ".jsbeautify"
