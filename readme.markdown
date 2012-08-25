@@ -2,7 +2,7 @@
 It is well known that a manual javascript formatting is very boring. Someone wrote a beautiful tool - js-beautify, but it never was *properly* integrated with vim. This one is the one I use for last 2 years.
 
 ##How this works
-1. Press a *<leader>ff* ( *,ff* if your leader is a comma) to format your javascript file when in a normal mode. 
+1. Press a *\<leader\> ff*( *,ff* if your leader key is a comma) to format your javascript file when in a normal mode. 
 2. Press a *Ctrl-f* inside an insert mode to format your javascript while you
    are editing it. The cursor position is kept so you can continue typing the
    code
