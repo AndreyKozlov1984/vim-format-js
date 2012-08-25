@@ -1,19 +1,9 @@
-(function(a) {
-	var files = arguments[0];
-	load(files[0]);
-	load(files[1]);
-	var input = "";
-	var line = "";
-	var blankcount = "0";
-	while (blankcount < 10) {
-		line = readline();
-
-		if (line == "") blankcount++;
-		else blankcount = 0;
-		if (line == "END") break;
-		input += line;
-		input += "\n";
-	}
-	input = input.substring(0, input.length - blankcount);
-	print(js_beautify(input, jsbeautify_options));
-})(arguments);
+var util = require('util');
+var fs = require('fs');
+var args = process.argv.splice(2);
+var js_beautify = require(args[0]).js_beautify;
+var options = args[1] || '{}';
+var options = JSON.parse(args[1] || '{}');
+var input = fs.readFileSync('/dev/stdin').toString();
+var result = (js_beautify(input, options));
+util.puts(result);

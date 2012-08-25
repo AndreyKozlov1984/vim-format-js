@@ -1,6 +1,6 @@
 let s:jsFolder = expand("<sfile>:p:h") . "/../js/"
 let s:payloadName = s:jsFolder . "payload.js"
-let s:jsName = s:jsFolder . "beautify.js"
+let s:jsBeautifyName = s:jsFolder . "beautify.js"
 "Remembering current position ignoring all blank symbols
 function! s:GetNumberOfNonSpaceCharactersFromTheStartOfFile(position)
     let cursorRow = a:position.line
@@ -73,8 +73,16 @@ function! s:FormatJs()
     let cursorPositions = s:GetCursorAndMarksPositions()
     call map(cursorPositions, " extend (v:val,{'characters': s:GetNumberOfNonSpaceCharactersFromTheStartOfFile(v:val)}) ")
 
-    let s:optionsName = s:GetOptionsFileName()
-    execute "%!js " . s:payloadName . " " . s:jsName . " " . s:optionsName
+    let l:indent_size = 1
+    let l:indent_char = "\\t"
+    if &expandtab
+        let l:indent_size = &softtabstop
+        let l:indent_char = " "
+    endif
+    let l:max_preserve_newlines = 1
+    "Next one is really hard, construct a valid json to pass to the node
+    let l:optionsJson = "'{\"indent_size\":" . l:indent_size  . ",\"indent_char\":\"" . l:indent_char . "\", \"max_preserve_newlines\": " . l:max_preserve_newlines . " }'"
+    execute "%!node " . s:payloadName . " " . s:jsBeautifyName . " " . l:optionsJson
 
     for [key,value] in items(cursorPositions)
         call s:SetNumberOfNonSpaceCharactersBeforeCursor(key,value.characters)
@@ -93,3 +101,5 @@ endfunction
 
 command! FormatJs call <SID>FormatJs()
 nmap <leader>ff :FormatJs<cr>
+"C-f provides us an indent mode refresh, is not the great?
+imap <C-f> <ESC><leader>ffa 
