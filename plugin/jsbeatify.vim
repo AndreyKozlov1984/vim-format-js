@@ -88,16 +88,6 @@ function! s:FormatJs()
         call s:SetNumberOfNonSpaceCharactersBeforeCursor(key,value.characters)
     endfor
 endfunction
-function! s:GetOptionsFileName()
-    let s:optionsInCurrentFolder = ".jsbeautify"
-    let s:optionsInHomeFolder = "~/.jsbeautify" 
-    let s:optionsInPlugin = s:jsFolder . "settings.js" 
-    for fileName in [s:optionsInCurrentFolder,s:optionsInHomeFolder,s:optionsInPlugin]
-        if filereadable(fileName)
-            return fileName
-        endif
-    endfor
-endfunction
 
 command! FormatJs call <SID>FormatJs()
 nmap <leader>ff :FormatJs<cr>
