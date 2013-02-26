@@ -90,6 +90,6 @@ function! s:FormatJs()
 endfunction
 
 command! FormatJs call <SID>FormatJs()
-nmap <leader>ff :FormatJs<cr>
+autocmd FileType javascript nmap <leader>ff :FormatJs<cr>
 "C-f provides us an indent mode refresh, is not the great?
-imap <C-f> <ESC><leader>ffa 
+autocmd FileType javascript imap <C-f> <ESC><leader>ffa
